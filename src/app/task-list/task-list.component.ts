@@ -1,7 +1,18 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Task, TaskService } from '../task.service';
+import { TaskService } from '../task.service';
 import { Router } from '@angular/router';
 // import { TableModule } from 'primeng/table';
+
+interface Task {
+  id?: number;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate: string;
+  description?: string;
+  checked: boolean;
+}
+
 
 @Component({
   selector: 'app-task-list',
@@ -24,40 +35,55 @@ export class TaskListComponent {
     title: 'task1', status: 'Pending' , priority: 'Low',dueDate:'2026-10-20', checked:false,
   },
   {
-    title: 'task2', status: 'Pending' , priority: 'High',dueDate:'2026-10-20', checked:false,
+    title: 'task2', status: 'In Progress' , priority: 'High',dueDate:'2026-10-20', checked:false,
   },
   {
-    title: 'task3', status: 'Pending' , priority: 'Low',dueDate:'2026-10-20', checked:false,
+    title: 'task3', status: 'In Progress' , priority: 'Low',dueDate:'2026-10-20', checked:false,
   },
   {
-    title: 'task4', status: 'Pending' , priority: 'Low',dueDate:'2026-10-20', checked:false,
+    title: 'task4', status: 'Done' , priority: 'Low',dueDate:'2026-10-20', checked:false,
   },]
+
+  
 
   constructor(private taskService : TaskService, private router:Router){
 
   }
 
   ngOnInit():void{
-    this.taskService.getTasks().subscribe(tasks => this.tasks = tasks);
+    // this.taskService.getTasks().subscribe(tasks => this.tasks = tasks);
+    this.filterTasks();
     if (history.state.Task) {
       this.TaskList = history.state.Task;
+      this.filteredTaskList = history.state.Task;
       
     }
   }
 
-  // checkTheCheckbox(item:any, i:any){
-  //   if (item.checked) {
-  //     this.selectedRows.push(item);
-  //   }else{
-  //     this.selectedRows.splice(i,1);
-  //   }
-  // }
 
   showDetails() {
-    this.router.navigate(['/task-detail'], { state: { Task: this.TaskList } });
+    // this.router.navigate(['/task-detail'], { state: { Task: this.TaskList } });
+    this.router.navigate(['/task-detail'], { state: { Task: this.filteredTaskList } });
   }
 
-   filteredTasks():Task[]{
-    return this.tasks.filter(task => this.statusFilter === '' || task.status === this.statusFilter);
-   }
+  filteredTaskList: Task[] = [];
+  dueDateFilter: string = '';
+
+  filterTasks() {
+    let filteredList = this.TaskList;
+
+    if (this.statusFilter !== '') {
+      filteredList = filteredList.filter(task => task.status == this.statusFilter);
+    }
+
+    if (this.dueDateFilter !== '') {
+      filteredList = filteredList.filter(task => new Date(task.dueDate) <= new Date(this.dueDateFilter));
+    }
+
+    this.filteredTaskList = filteredList;
+  }
+
+  
+
+  
 }
