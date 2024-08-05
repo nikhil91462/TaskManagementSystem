@@ -6,8 +6,8 @@
         </div>
 
         <div class="addrowDiv">
-        <button class="btn btn-primary" (click)="addRow()">Add Details</button>
-    </div>
+            <app-button [label]="'Add Details'" (onClick)="addRow()"></app-button>
+          </div>
         <table class="table task_listTable">
             <thead>
                 <tr>
@@ -25,12 +25,12 @@
                     <td><input type="text" [(ngModel)]="item.priority" name="priority-{{i}}"></td>
                     <td><input type="date" [(ngModel)]="item.dueDate" name="dueDate-{{i}}"></td>
                     <td><button (click)="DeleteRow(i)" title="Remove">Delete</button></td>
-                  </tr>
+                </tr>
             </tbody>
         </table>
- 
+
         <div class="saveDiv">
-            <button class="btn btn-primary" (click)="saveDetails()">Save Details</button>
+            <app-button [label]="'Save Details'" (onClick)="saveDetails()"></app-button>
         </div>
 
     </div>
